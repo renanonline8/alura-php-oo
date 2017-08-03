@@ -7,9 +7,6 @@ require_once("class/Categoria.php");
 
 verificaUsuario();
 
-
-
-
 $nome = $_POST['nome'];
 $preco = $_POST['preco'];
 $descricao = $_POST['descricao'];
@@ -25,7 +22,9 @@ $categoria->setId($_POST['categoria_id']);
 
 $produto = new Produto($nome, $preco, $descricao, $categoria, $usado);
 
-if(insereProduto($conexao, $produto)) { ?>
+$produtoDAO = new ProdutoDAO($conexao);
+
+if($produtoDAO->insereProduto($produto)) { ?>
 	<p class="text-success">O produto <?= $produto->getNome() ?>, <?= $produto->getPreco() ?> foi adicionado.</p>
 <?php 
 } else {

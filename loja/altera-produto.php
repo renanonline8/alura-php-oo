@@ -20,7 +20,8 @@ $categoria->setId($_POST['categoria_id']);
 $produto = new Produto($nome, $preco, $descricao, $categoria, $usado);
 $produto->setId($_POST['id']);
 
-if(alteraProduto($conexao, $produto)) { ?>
+$produtoDAO = new ProdutoDAO($conexao);
+if($produtoDAO->alteraProduto($produto)) { ?>
 	<p class="text-success">O produto <?= $produto->getNome() ?>, <?= $produto->getPreco() ?> foi alterado.</p>
 <?php 
 } else {

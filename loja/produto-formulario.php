@@ -17,8 +17,8 @@ $produto = new Produto('', '', '', $categoria, '');
 $produto = array("nome" => "", "descricao" => "", "preco" => "", 
 	"categoria_id" => "1", "usado" => "");
 */
-
-$categorias = listaCategorias($conexao);
+$categoriaDAO = new CategoriaDAO($conexao);
+$categorias = $categoriaDAO->listaCategorias();
 
 ?>	
 

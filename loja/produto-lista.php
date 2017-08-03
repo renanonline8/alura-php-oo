@@ -5,7 +5,8 @@ require_once("banco-produto.php");
 
 <table class="table table-striped table-bordered">
 	<?php
-	$produtos = listaProdutos($conexao);
+	$produtoDAO = new ProdutoDAO($conexao);
+	$produtos = $produtoDAO->listaProdutos();
 	foreach($produtos as $produto) :
 	?>
 		<tr>
