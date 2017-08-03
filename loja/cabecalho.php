@@ -1,4 +1,10 @@
 <?php
+//Carrega as classes não incluidas em arquivo. Para funcionar o nome do Arquivo deve ser o nome da Classe
+function carregaClasse($nomeClasse) {
+	require_once("class/".$nomeClasse.".php");
+}
+spl_autoload_register("carregaClasse");
+
 error_reporting(E_ALL ^ E_NOTICE);
 require_once("mostra-alerta.php"); ?>
 <html>
