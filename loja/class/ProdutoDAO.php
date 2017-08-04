@@ -20,8 +20,16 @@ class ProdutoDAO {
             $descricao = $produto_array['descricao'];
             $preco = $produto_array['preco'];
             $usado = $produto_array['usado'];
+            $isbn = $produto_array['isbn'];
+            $tipoProduto = $produto_array['tipoProduto'];
 
-            $produto = new Produto($nome, $preco, $descricao, $categoria, $usado);
+            if ($tipoProduto == "Livro") {
+                $produto = new Livro($nome, $preco, $descricao, $categoria, $usado);
+                $produto->setISBN($isbn);
+            } else {
+                $produto = new Produto($nome, $preco, $descricao, $categoria, $usado);
+            }
+            
             $produto->setId($produto_array['id']);
 
             array_push($produtos, $produto);
@@ -32,17 +40,32 @@ class ProdutoDAO {
 
     function insereProduto(Produto $produto) {
 
-        $query = "insert into produtos (nome, preco, descricao, categoria_id, usado) 
-            values ('{$produto->getNome()}', {$produto->getPreco()}, '{$produto->getDescricao()}', {$produto->getCategoria()->getNome()}, {$produto->getUsado()})";
+        $isbn = "";
+        if ($produto->temIsbn()) {
+            $isbn = $produto->getIsbn();
+        }
+
+        $tipoProduto = get_class($produto);
+
+        $query = "insert into produtos (nome, preco, descricao, categoria_id, usado, tipoProduto, isbn) 
+            values ('{$produto->getNome()}', {$produto->getPreco()}, '{$produto->getDescricao()}', 
+                {$produto->getCategoria()->getNome()}, {$produto->getUsado()}), '{$tipoProduto}', '{$isbn}'";
 
         return mysqli_query($this->conexao, $query);
     }
 
     function alteraProduto(Produto $produto) {
 
+        $isbn = "";
+        if ($produto->temIsbn()) {
+            $isbn = $produto->getIsbn();
+        }
+
+        $tipoProduto = get_class($produto);
+
         $query = "update produtos set nome = '{$produto->getNome()}', preco = {$produto->getPreco()}, 
             descricao = '{$produto->getDescricao()}', categoria_id= {$produto->getCategoria()->getNome()}, 
-                usado = {$produto->getUsado()} where id = '{$produto->getId()}'";
+                usado = {$produto->getUsado()}, tipoProduto = '{$tipoProduto}', isbn = '{$isbn}' where id = '{$produto->getId()}'";
 
         return mysqli_query($this->conexao, $query);
     }
@@ -57,11 +80,18 @@ class ProdutoDAO {
         $preco = $produto_array['preco'];
         $descricao = $produto_array['descricao'];
         $usado = $produto_array['usado'];
+        $isbn = $produto_array['isbn'];
+        $tipoProduto = $produto_array['tipoProduto'];
 
         $categoria = new Categoria();
         $categoria->getId($produto_array['categoria_id']);
 
-        $produto = new Produto($nome, $preco, $descricao, $categoria, $usado);
+        if ($tipoProduto == "Livro") {
+            $produto = new Livro($nome, $preco, $descricao, $categoria, $usado);
+            $produto->setISBN($isbn);
+        } else {
+            $produto = new Produto($nome, $preco, $descricao, $categoria, $usado);
+        }
         $produto->getId($produto_array['id']);
 
         return $produto;

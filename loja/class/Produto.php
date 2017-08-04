@@ -60,5 +60,9 @@ class Produto {
     public function setUsado($usado) {
         $this->usado = $usado;
     }
+
+    public function temIsbn() {
+        return $this instanceof Livro;
+    }
     
 }
