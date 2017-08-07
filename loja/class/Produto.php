@@ -64,5 +64,9 @@ class Produto {
     public function temIsbn() {
         return $this instanceof Livro;
     }
+
+    public function calculaImposto() {
+        return $this->preco * 0.195;
+    }
     
 }

@@ -9,4 +9,8 @@ class Livro extends Produto {
     function setISBN($valor){
         $this->$isbn = $valor;
     }
+
+    function calculaImposto() {
+        return $this->getPreco * 0,065;
+    }
 }
