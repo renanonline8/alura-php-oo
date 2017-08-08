@@ -45,7 +45,7 @@
     <td>
         <select name="tipoProduto" class="form-control">
             <?php
-            $tipos = array("Produto", "Ebook", "Livro Fisico");
+            $tipos = array("Ebook", "Livro Fisico");
             foreach($tipos as $tipo) : 
 				$tipoSemEspaco = str_replace(' ', '', $tipo)
                 $esseEhOTipo = get_class($produto) == $tipo;

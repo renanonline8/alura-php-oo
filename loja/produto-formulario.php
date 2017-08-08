@@ -10,7 +10,7 @@ verificaUsuario();
 $categoria = new Categoria();
 $categoria->setID("1");
 
-$produto = new Produto('', '', '', $categoria, '');
+$produto = new LivroFisico('', '', '', $categoria, '');
 
 /*
 2017-08-02 Antes de orientar a objeto

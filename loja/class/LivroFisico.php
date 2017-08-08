@@ -11,4 +11,9 @@ class LivroFisico extends Livro {
     function setTaxaImpressao($valor) {
         $this->taxaImpressao = $valor;
     }
+
+    function atualizaBaseadoEm($params) {
+        $this->setIsbn($params['isbn']);
+        $this->setTaxaImpressao($params['taxaImpressao']);
+    }
 }
