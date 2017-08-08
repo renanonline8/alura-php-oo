@@ -16,22 +16,22 @@ class ProdutoDAO {
             $categoria = new Categoria();
             $categoria->setNome($produto_array['categoria_nome']);
 
-            $nome = $produto_array['nome'];
-            $descricao = $produto_array['descricao'];
-            $preco = $produto_array['preco'];
-            $usado = $produto_array['usado'];
-            $isbn = $produto_array['isbn'];
-            $tipoProduto = $produto_array['tipoProduto'];
+            $tipoProduto = $_POST['tipoProduto'];
+            $categoria_id = $_POST['categoria_id'];
 
-            if ($tipoProduto == "Livro") {
-                $produto = new Livro($nome, $preco, $descricao, $categoria, $usado);
-                $produto->setISBN($isbn);
-            } else {
-                $produto = new Produto($nome, $preco, $descricao, $categoria, $usado);
-            }
-            
+            $factory = new ProdutoFactory();
+            $produto = $factory->criaPor($tipoProduto, $_POST);
+            $produto->atualizaBaseadoEm($_POST);
+
+            $produto->getCategoria()->setId($categoria_id);
             $produto->setId($produto_array['id']);
 
+            if(array_key_exists('usado', $_POST)) {
+                $produto->setUsado("true");
+            } else {
+                $produto->setUsado("false");
+            }
+            
             array_push($produtos, $produto);
         }
 
@@ -47,9 +47,10 @@ class ProdutoDAO {
 
         $tipoProduto = get_class($produto);
 
-        $query = "insert into produtos (nome, preco, descricao, categoria_id, usado, tipoProduto, isbn) 
+        $query = "insert into produtos (nome, preco, descricao, categoria_id, usado, tipoProduto, isbn, waterMark, taxaImpressao) 
             values ('{$produto->getNome()}', {$produto->getPreco()}, '{$produto->getDescricao()}', 
-                {$produto->getCategoria()->getNome()}, {$produto->getUsado()}), '{$tipoProduto}', '{$isbn}'";
+                {$produto->getCategoria()->getNome()}, {$produto->getUsado()}), '{$tipoProduto}', '{$isbn}', '{$produto->getWaterMark()}', 
+                    '{$produto->getTaxaImpressao()}'";
 
         return mysqli_query($this->conexao, $query);
     }
@@ -65,7 +66,8 @@ class ProdutoDAO {
 
         $query = "update produtos set nome = '{$produto->getNome()}', preco = {$produto->getPreco()}, 
             descricao = '{$produto->getDescricao()}', categoria_id= {$produto->getCategoria()->getNome()}, 
-                usado = {$produto->getUsado()}, tipoProduto = '{$tipoProduto}', isbn = '{$isbn}' where id = '{$produto->getId()}'";
+                usado = {$produto->getUsado()}, tipoProduto = '{$tipoProduto}', isbn = '{$isbn}', watermark = '{$produto->getWaterMark()'}, 
+                    taxaImpressao = '{$produto->getTaxaImpressao()}' where id = '{$produto->getId()}'";
 
         return mysqli_query($this->conexao, $query);
     }
@@ -76,23 +78,21 @@ class ProdutoDAO {
         $resultado = mysqli_query($this->conexao, $query);
         $produto_array = mysqli_fetch_assoc($resultado);
 
-        $nome = $produto_array['nome'];
-        $preco = $produto_array['preco'];
-        $descricao = $produto_array['descricao'];
-        $usado = $produto_array['usado'];
-        $isbn = $produto_array['isbn'];
-        $tipoProduto = $produto_array['tipoProduto'];
+        $tipoProduto = $_POST['tipoProduto'];
+        $categoria_id = $_POST['categoria_id'];
 
-        $categoria = new Categoria();
-        $categoria->getId($produto_array['categoria_id']);
+        $factory = new ProdutoFactory();
+        $produto = $factory->criaPor($tipoProduto, $_POST);
+        $produto->atualizaBaseadoEm($_POST);
 
-        if ($tipoProduto == "Livro") {
-            $produto = new Livro($nome, $preco, $descricao, $categoria, $usado);
-            $produto->setISBN($isbn);
+        $produto->getCategoria()->setId($categoria_id);
+        $produto->setId($produto_array['id']);
+
+        if(array_key_exists('usado', $_POST)) {
+            $produto->setUsado("true");
         } else {
-            $produto = new Produto($nome, $preco, $descricao, $categoria, $usado);
+            $produto->setUsado("false");
         }
-        $produto->getId($produto_array['id']);
 
         return $produto;
     }

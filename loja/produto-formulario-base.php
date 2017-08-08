@@ -45,14 +45,22 @@
     <td>
         <select name="tipoProduto" class="form-control">
             <?php
-            $tipos = array("Livro", "Produto");
+            $tipos = array("Produto", "Ebook", "Livro Fisico");
             foreach($tipos as $tipo) : 
+				$tipoSemEspaco = str_replace(' ', '', $tipo)
                 $esseEhOTipo = get_class($produto) == $tipo;
                 $selecaoTipo = $esseEhOTipo ? "selected='selected'" : "";
             ?>
+				<?php if ($tipo == "Ebook") : ?>
+					<optgroup label="Livros">
+				<?php endif ?>
                 <option value="<?=$tipo?>" <?=$selecaoTipo?>>
                     <?=$tipo?>
                 </option>
+				<?php if ($tipo == "Livro Fisico") : ?>
+					</optgroup>
+				<?php endif ?>
+				<?php
             <?php
             endforeach 
             ?>
@@ -64,5 +72,19 @@
     <td>
         <input type="text" name="isbn" class="form-control" 
             value="<?php if ($produto->temIsbn()) { echo $produto->getIsbn(); } ?>" >
+    </td>
+</tr>
+<tr>
+    <td>Taxa de impressão</td>
+    <td>
+        <input type="text" name="taxaImpressao" class="form-control" 
+            value="<?php if ($produto->temTaxaImpressao()) { echo $produto->getTaxaImpressao(); } ?>" >
+    </td>
+</tr>
+<tr>
+    <td>WaterMark</td>
+    <td>
+        <input type="text" name="waterMark" class="form-control" 
+            value="<?php if ($produto->temWaterMark()) { echo $produto->getWaterMark(); } ?>" >
     </td>
 </tr>
